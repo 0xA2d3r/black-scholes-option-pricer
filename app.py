@@ -1,76 +1,45 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+from scipy.stats import norm
 
 # Configure page settings
 st.set_page_config(
-    page_title="Streamlit Dashboard",
-    page_icon="📊",
+    page_title="Black-Scholes Option Pricer",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # Main application header
-st.title("📊 Streamlit Dashboard")
-st.subheader("Welcome to your Streamlit application")
-
-# Introduction section
-st.markdown("""
-This is a blank Streamlit application template that you can build upon for your data analysis and visualization needs.
-Use the navigation menu on the left to explore different sections of the application.
-""")
+st.title("Black-Scholes Option Pricer")
 
 # Application overview in the main page
-st.header("Application Overview")
+st.header("Black-Scholes Model Inputs")
 
-# Using columns for responsive layout
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns([1,1,1], gap="small")
 
 with col1:
-    st.subheader("Data Analysis")
-    st.markdown("""
-    In the Data Analysis section, you can:
-    - Load your data
-    - Explore data statistics
-    - Perform data transformations
-    """)
-    
-    # Navigation button to Data Analysis page
-    if st.button("Go to Data Analysis"):
-        st.switch_page("pages/01_data_analysis.py")
+    current_price = st.number_input("Current Asset Price", value=100.0)
+    strike = st.number_input("Strike Price", value=100.0)
+    time_to_maturity = st.number_input("Time to Maturity (Years)", value=1.0)
+    volatility = st.number_input("Volatility (σ)", value=0.2)
+    interest_rate = st.number_input("Risk-Free Interest Rate", value=0.05)
 
-with col2:
-    st.subheader("Data Visualization")
-    st.markdown("""
-    In the Data Visualization section, you can:
-    - Create various types of charts
-    - Customize visualizations
-    - Export visualization results
-    """)
-    
-    # Navigation button to Visualization page
-    if st.button("Go to Data Visualization"):
-        st.switch_page("pages/02_visualization.py")
+class BlackScholes:
+    def __init__(self, time_to_maturity, strike, current_price, volatility, interest_rate):
+        self.time_to_maturity = time_to_maturity
+        self.strike = strike
+        self.current_price = current_price
+        self.volatility = volatility
+        self.interest_rate = interest_rate
 
-# Settings section information
-st.subheader("Settings")
-st.markdown("""
-Configure application settings and preferences in the Settings section.
-""")
+    def calculate_prices(self):
+        d1 = (np.log(self.current_price / self.strike) + (self.interest_rate + 0.5 * self.volatility ** 2) * self.time_to_maturity) / (self.volatility * np.sqrt(self.time_to_maturity))
+        d2 = d1 - self.volatility * np.sqrt(self.time_to_maturity)
+        call_price = self.current_price * norm.cdf(d1) - self.strike * np.exp(-self.interest_rate * self.time_to_maturity) * norm.cdf(d2)
+        put_price = self.strike * np.exp(-self.interest_rate * self.time_to_maturity) * norm.cdf(-d2) - self.current_price * norm.cdf(-d1)
+        return call_price, put_price
 
-# Navigation button to Settings page
-if st.button("Go to Settings"):
-    st.switch_page("pages/03_settings.py")
 
-# Sidebar for additional navigation
-with st.sidebar:
-    st.title("Navigation")
-    st.markdown("Use this sidebar to navigate between different sections of the application.")
-    
-    # Session state initialization for tracking app state
-    if "initialized" not in st.session_state:
-        st.session_state["initialized"] = True
-        st.session_state["data_loaded"] = False
-    
-    st.divider()
-    st.info("Select a page from the menu above or use the buttons on the main page to navigate.")
+bs_model = BlackScholes(time_to_maturity, strike, current_price, volatility, interest_rate)
+call_price, put_price = bs_model.calculate_prices()
