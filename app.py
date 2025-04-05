@@ -79,7 +79,7 @@ with col2:
     with col11:
         # Call Option Header with green background
         st.markdown("""
-        <div style="background-color: #0a5e2f; padding: 10px; border-radius: 5px;">
+        <div style="background-color: #0a5e2f; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
             <h2 style="color: white; text-align: center; margin: 0;">Call Option</h2>
         </div>
         """, unsafe_allow_html=True)
@@ -93,7 +93,7 @@ with col2:
     with col12:
         # Put Option Header with red background
         st.markdown("""
-        <div style="background-color: #b30000; padding: 10px; border-radius: 5px;">
+        <div style="background-color: #b30000; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
             <h2 style="color: white; text-align: center; margin: 0;">Put Option</h2>
         </div>
         """, unsafe_allow_html=True)
