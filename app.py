@@ -74,6 +74,15 @@ bs_model = BlackScholes(time_to_maturity, strike, current_price, volatility, int
 call_price, put_price = bs_model.calculate_prices()
 c_delta, p_delta, gamma, c_theta, p_theta, vega, c_rho, p_rho = bs_model.calculate_greeks()
 
+# Add CSS to center metric values and labels
+st.markdown("""
+<style>
+[data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
+    text-align: center;
+}
+</style>
+""", unsafe_allow_html=True)
+
 with col2:
     col11, col12 = st.columns([1,1], gap="small")
     with col11:
@@ -83,6 +92,7 @@ with col2:
             <h2 style="color: white; text-align: center; margin: 0;">Call Option</h2>
         </div>
         """, unsafe_allow_html=True)
+        
         st.metric("Call Price", f"{call_price:.2f}")
         st.metric("Delta", f"{c_delta:.2f}")
         st.metric("Gamma", f"{gamma:.2f}")
