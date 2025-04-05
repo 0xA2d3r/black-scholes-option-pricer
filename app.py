@@ -88,7 +88,7 @@ with col2:
     with col11:
         # Call Option Header with green background
         st.markdown("""
-        <div style="background-color: #0a5e2f; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <div style="background-color: #0a5e2f; padding: 3px; border-radius: 5px; margin-bottom: 20px;">
             <h2 style="color: white; text-align: center; margin: 0;">Call Option</h2>
         </div>
         """, unsafe_allow_html=True)
@@ -103,7 +103,7 @@ with col2:
     with col12:
         # Put Option Header with red background
         st.markdown("""
-        <div style="background-color: #b30000; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <div style="background-color: #b30000; padding: 3px; border-radius: 5px; margin-bottom: 20px;">
             <h2 style="color: white; text-align: center; margin: 0;">Put Option</h2>
         </div>
         """, unsafe_allow_html=True)
@@ -114,8 +114,70 @@ with col2:
         st.metric("Vega", f"{vega:.2f}")
         st.metric("Rho", f"{p_rho:.2f}")
 
+with col3:
+    st.header("Analysis")
     
+    # Analysis header with blue background
+    st.markdown("""
+    <div style="background-color: #0066cc; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <h2 style="color: white; text-align: center; margin: 0;">Market Insights</h2>
+    </div>
+    """, unsafe_allow_html=True)
     
-
+    # Price Analysis
+    st.subheader("Price Analysis")
+    price_ratio = round(call_price / put_price, 2) if put_price > 0 else float('inf')
+    price_diff = round(call_price - put_price, 2)
     
+    if price_diff > 0:
+        st.write(f"Call options are trading at a premium of {price_diff:.2f} over put options.")
+    elif price_diff < 0:
+        st.write(f"Put options are trading at a premium of {abs(price_diff):.2f} over call options.")
+    else:
+        st.write("Call and put options are priced equally, suggesting market neutrality.")
     
+    # Greek Analysis
+    st.subheader("Greek Analysis")
+    
+    # Delta Analysis
+    st.write("**Delta Interpretation:**")
+    if c_delta > 0.7:
+        st.write("Call option is highly sensitive to price movement (deep in-the-money).")
+    elif c_delta < 0.3:
+        st.write("Call option has low sensitivity to price movement (out-of-the-money).")
+    else:
+        st.write("Call option has moderate sensitivity to price changes (near-the-money).")
+    
+    # Gamma Analysis
+    st.write("**Gamma Interpretation:**")
+    if gamma > 0.05:
+        st.write("High gamma indicates rapidly changing delta - position requires active management.")
+    else:
+        st.write("Low gamma indicates stable delta - position is less sensitive to small price changes.")
+    
+    # Theta Analysis
+    st.write("**Theta Interpretation:**")
+    if c_theta < -0.1:
+        st.write("Significant time decay: option is losing value quickly with time.")
+    else:
+        st.write("Moderate time decay: option value is relatively stable over time.")
+    
+    # Vega Analysis
+    st.write("**Vega Interpretation:**")
+    if vega > 0.2:
+        st.write("High volatility sensitivity: position is greatly affected by changes in volatility.")
+    else:
+        st.write("Low volatility sensitivity: position is relatively stable against volatility changes.")
+    
+    # Trading Strategy Suggestions
+    st.subheader("Potential Strategies")
+    
+    if current_price > strike * 1.1:
+        st.write("- Consider bull call spreads to capitalize on upward momentum")
+        st.write("- Long calls may be profitable but expensive")
+    elif current_price < strike * 0.9:
+        st.write("- Consider bear put spreads to capitalize on downward movement")
+        st.write("- Long puts may be profitable but watch time decay")
+    else:
+        st.write("- Consider straddles or strangles to capitalize on expected volatility")
+        st.write("- Iron condors may be appropriate if expecting range-bound movement")
