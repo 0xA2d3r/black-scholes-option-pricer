@@ -1,0 +1,24 @@
+[server]
+headless = true
+address = "0.0.0.0"
+port = 5000
+
+[theme]
+# This section can be customized based on user requests in the future
+# Using default Streamlit theme for now
+
+[logger]
+level = "info"
+
+[runner]
+# Default runner configuration
+fastReruns = true
+
+[browser]
+# Default browser configuration
+serverAddress = "localhost"
+gatherUsageStats = false
+
+[global]
+# Default global configuration
+dataFrameSerialization = "arrow"
