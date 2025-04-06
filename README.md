@@ -8,4 +8,4 @@ An interactive web application built with Streamlit for pricing financial option
 - Real-time calculation of Greeks
 - Market insights and analysis
 
-Built with Python and Streamlit
+Built with Python and Streamlit using Replit
